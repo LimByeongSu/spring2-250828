@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequiredArgsConstructor
+@RequiredArgsConstructor  //생성자 주입
 public class PersonController {
 
     private final PersonService personService;
