@@ -43,7 +43,7 @@ public class WiseSayingController {
         return wiseSaying.getId()+"번 명언이 등록되었습니다.";
     }
 
-    @GetMapping("/wiseSaying/list")
+    @GetMapping("/wiseSayings")
     @ResponseBody
     public String list() {
 
@@ -91,6 +91,23 @@ public class WiseSayingController {
         wiseSaying.setContent(content);
 
         return id+"번 명언이 수정되었습니다.";
+    }
+
+    //상세보기 기능
+    @GetMapping("/wiseSayings/{id}")
+    @ResponseBody
+    public String detail(
+            @PathVariable int id
+    ){
+        WiseSaying wiseSaying = findById(id);
+
+
+
+        return """
+                <h1>번호 : %s</h1>
+                <div>명언 : %s</div>
+                <div>작가 : %s</div>
+                """.formatted(wiseSaying.getId(), wiseSaying.getContent(), wiseSaying.getAuthor());
     }
 
     private WiseSaying findById(int id) {
