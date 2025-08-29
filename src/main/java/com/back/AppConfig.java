@@ -5,14 +5,12 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
 @Configuration  //무언가를 설정하는 클래스에 @Configuration를 붙히는 것이다.
 public class AppConfig {
 
     @Autowired
-    @Lazy
     private AppConfig self; //AppConfig이므로 this와 같다고 생각할수있지만 this와는 @Lazy의 차이가 있다.
 
 
@@ -23,8 +21,8 @@ public class AppConfig {
         return new ApplicationRunner() {
             @Override
             public void run(ApplicationArguments args) throws Exception {
-                work1();
-                work2();
+                self.work1();
+                self.work2();
             }
         };
     }
