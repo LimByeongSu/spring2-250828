@@ -1,28 +1,23 @@
 package com.back.domain.wiseSaying.controller;
 
 import com.back.domain.wiseSaying.entity.WiseSaying;
+import com.back.domain.wiseSaying.service.WiseSayingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
+@RequiredArgsConstructor    // 빈 주입
 public class WiseSayingController {
 
-    int lastId=0;
-    private List<WiseSaying> wiseSayingList = new ArrayList<>() {{
-        add(new WiseSaying(1, "명언1", "작가1"));
-        add(new WiseSaying(2, "명언2", "작가2"));
-        add(new WiseSaying(3, "명언3", "작가3"));
-        add(new WiseSaying(4, "명언4", "작가4"));
-        add(new WiseSaying(5, "명언5", "작가5"));
-    }};
+    private WiseSayingService wiseSayingService;
+
 
     @GetMapping("/wiseSaying/write")
     @ResponseBody
@@ -37,8 +32,8 @@ public class WiseSayingController {
         if(author==null||author.trim().length()==0){ //입력 값이 null이거나 비어있거나 하는 경우
             throw new RuntimeException("작가를 입력해주세요.");
         }
-        WiseSaying wiseSaying=new WiseSaying(++lastId, content, author);
-        wiseSayingList.add(wiseSaying);
+        WiseSaying wiseSaying = wiseSayingService.write(content, author);
+
 
         return wiseSaying.getId()+"번 명언이 등록되었습니다.";
     }
@@ -47,7 +42,7 @@ public class WiseSayingController {
     @ResponseBody
     public String list() {
 
-        String wiseSayings = wiseSayingList.stream()
+        String wiseSayings =  wiseSayingService.findAll().stream()
                 .map(w -> "<li>%s / %s / %s</li>".formatted(w.getId(), w.getContent(), w.getAuthor()))
                 .collect(Collectors.joining("\n"));
 
@@ -70,9 +65,8 @@ public class WiseSayingController {
             @PathVariable int id    // @PathVariable은 path에 있는 값을 꺼내 쓰겠다는 의미다.
     ){
         //삭제할 대상 찾기
-        WiseSaying wiseSaying = findById(id);
-
-        wiseSayingList.remove(wiseSaying);    //id와 index는 다르기때문에 객체를 기반으로 삭제
+        WiseSaying wiseSaying = wiseSayingService.findById(id);
+        wiseSayingService.delete(wiseSaying);
 
         return id+"번 명언이 삭제 되었습니다.";
     }
@@ -99,7 +93,7 @@ public class WiseSayingController {
     public String detail(
             @PathVariable int id
     ){
-        WiseSaying wiseSaying = findById(id);
+        WiseSaying wiseSaying = wiseSayingService.findById(id);
 
 
 
