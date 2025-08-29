@@ -4,6 +4,7 @@ import com.back.domain.wiseSaying.entity.WiseSaying;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
@@ -15,7 +16,13 @@ import java.util.stream.Collectors;
 public class WiseSayingController {
 
     int lastId=0;
-    private List<WiseSaying> wiseSayingList = new ArrayList<>();
+    private List<WiseSaying> wiseSayingList = new ArrayList<>() {{
+        add(new WiseSaying(1, "명언1", "작가1"));
+        add(new WiseSaying(2, "명언2", "작가2"));
+        add(new WiseSaying(3, "명언3", "작가3"));
+        add(new WiseSaying(4, "명언4", "작가4"));
+        add(new WiseSaying(5, "명언5", "작가5"));
+    }};
 
     @GetMapping("/wiseSaying/write")
     @ResponseBody
@@ -62,17 +69,41 @@ public class WiseSayingController {
     public String delete(
             @PathVariable int id    // @PathVariable은 path에 있는 값을 꺼내 쓰겠다는 의미다.
     ){
+        //삭제할 대상 찾기
+        WiseSaying wiseSaying = findById(id);
+
+        wiseSayingList.remove(wiseSaying);    //id와 index는 다르기때문에 객체를 기반으로 삭제
+
+        return id+"번 명언이 삭제 되었습니다.";
+    }
+
+    @GetMapping("/wiseSaying/modify/{id}")
+    // wiseSaying/modify/{id}?content=""&author="" 형태일 것이다.
+    @ResponseBody
+    public String modify(
+            @PathVariable int id,
+            @RequestParam(defaultValue = "기본값") String author,
+            @RequestParam(defaultValue = "기본값") String content
+    ){
+        //수정할 대상 찾기
+        WiseSaying wiseSaying = findById(id);
+        wiseSaying.setAuthor(author);
+        wiseSaying.setContent(content);
+
+        return id+"번 명언이 수정되었습니다.";
+    }
+
+    private WiseSaying findById(int id) {
         Optional<WiseSaying> wiseSaying=wiseSayingList.stream()
-                .filter(w -> w.getId() ==id)
+                .filter(w -> w.getId() == id)
                 .findFirst();
 
 
         if(wiseSaying.isEmpty()){
-            throw new RuntimeException(id+"번 명언은 존재하지 않습니다.");
+            throw new RuntimeException(id +"번 명언은 존재하지 않습니다.");
         }
-
-        wiseSayingList.remove(wiseSaying.get());    //id와 index는 다르기때문에 get()으로 객체를 기반으로 삭제
-
-        return id+"번 명언이 삭제 되었습니다.";
+        return wiseSaying.get();
     }
+
+
 }
