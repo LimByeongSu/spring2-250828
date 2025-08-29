@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -80,9 +79,8 @@ public class WiseSayingController {
             @RequestParam(defaultValue = "기본값") String content
     ){
         //수정할 대상 찾기
-        WiseSaying wiseSaying = findById(id);
-        wiseSaying.setAuthor(author);
-        wiseSaying.setContent(content);
+        WiseSaying wiseSaying = wiseSayingService.findById(id);
+        wiseSayingService.modify(wiseSaying, content, author);
 
         return id+"번 명언이 수정되었습니다.";
     }
@@ -95,26 +93,11 @@ public class WiseSayingController {
     ){
         WiseSaying wiseSaying = wiseSayingService.findById(id);
 
-
-
         return """
                 <h1>번호 : %s</h1>
                 <div>명언 : %s</div>
                 <div>작가 : %s</div>
                 """.formatted(wiseSaying.getId(), wiseSaying.getContent(), wiseSaying.getAuthor());
     }
-
-    private WiseSaying findById(int id) {
-        Optional<WiseSaying> wiseSaying=wiseSayingList.stream()
-                .filter(w -> w.getId() == id)
-                .findFirst();
-
-
-        if(wiseSaying.isEmpty()){
-            throw new RuntimeException(id +"번 명언은 존재하지 않습니다.");
-        }
-        return wiseSaying.get();
-    }
-
 
 }

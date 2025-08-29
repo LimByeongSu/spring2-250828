@@ -22,14 +22,6 @@ public class WiseSayingService {
 
     public WiseSaying write(String content, String author) {
 
-
-        if(content == null || content.trim().length() == 0) {
-            throw new RuntimeException("명언을 입력해주세요.");
-        }
-
-        if(author == null || author.trim().length() == 0) {
-            throw new RuntimeException("작가를 입력해주세요.");
-        }
         WiseSaying wiseSaying = new WiseSaying(++lastId, content, author);
         wiseSayingList.add(wiseSaying);
 
