@@ -1,51 +1,42 @@
 package com.back.domain.wiseSaying.service;
 
 import com.back.domain.wiseSaying.entity.WiseSaying;
+import com.back.domain.wiseSaying.repository.WiseSayingRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class WiseSayingService {
 
-    private List<WiseSaying> wiseSayingList = new ArrayList<>() {{
-        add(new WiseSaying(1, "명언1", "작가1"));
-        add(new WiseSaying(2, "명언2", "작가2"));
-        add(new WiseSaying(3, "명언3", "작가3"));
-        add(new WiseSaying(4, "명언4", "작가4"));
-        add(new WiseSaying(5, "명언5", "작가5"));
-    }};
-
-    private int lastId = 5;
+    private final WiseSayingRepository wiseSayingRepository;
 
     public WiseSaying write(String content, String author) {
 
-        WiseSaying wiseSaying = new WiseSaying(++lastId, content, author);
-        wiseSayingList.add(wiseSaying);
+        WiseSaying wiseSaying = new WiseSaying(content, author);
+        wiseSayingRepository.save(wiseSaying);
 
         return wiseSaying;
     }
 
     public List<WiseSaying> findAll() {
-        return wiseSayingList;
+        return wiseSayingRepository.findAll();
     }
 
     public WiseSaying findById(int id) {
-        Optional<WiseSaying> wiseSaying = wiseSayingList.stream()
-                .filter(w -> w.getId() == id)
-                .findFirst();
+        Optional<WiseSaying> wiseSaying = wiseSayingRepository.findById(id);
 
         if(wiseSaying.isEmpty()) {
             throw new RuntimeException("%d번 명언은 존재하지 않습니다.".formatted(id));
         }
-
         return wiseSaying.get();
     }
 
     public void delete(WiseSaying wiseSaying) {
-        wiseSayingList.remove(wiseSaying);
+        wiseSayingRepository.delete(wiseSaying);
     }
 
     public void modify(WiseSaying wiseSaying, String content, String author) {
