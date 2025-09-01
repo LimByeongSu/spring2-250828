@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 public class WiseSayingController {
 
     private WiseSayingService wiseSayingService;
+    private  final Parser parser;
+    private  final HtmlRenderer renderer;
 
 
     @GetMapping("/wiseSaying/write")
@@ -96,10 +98,8 @@ public class WiseSayingController {
     ){
         WiseSaying wiseSaying = wiseSayingService.findById(id);
 
-        // 파서 & 렌더러 준비
-        Parser parser = Parser.builder().build();
+        // 파서 & 렌더러 준비 -> bean으로 해결
         Node document = parser.parse(wiseSaying.getContent());
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
 
 
         // HTML 변환
