@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class WiseSayingRepository {
+public class WiseSayingMemRepository {
 
     private List<WiseSaying> wiseSayingList = new ArrayList<>();
 

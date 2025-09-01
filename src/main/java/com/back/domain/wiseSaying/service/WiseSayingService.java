@@ -12,7 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WiseSayingService {
 
-    private final WiseSayingRepository wiseSayingRepository;
+    private final WiseSayingRepository wiseSayingMemRepository;
 
     //ApplicationRunner는 모든 준비가 끝마치고 실행되는거라
     //ApplicationRunner에서 하는게 제일 안전함
@@ -40,17 +40,17 @@ public class WiseSayingService {
     public WiseSaying write(String content, String author) {
 
         WiseSaying wiseSaying = new WiseSaying(content, author);
-        wiseSayingRepository.save(wiseSaying);
+        wiseSayingMemRepository.save(wiseSaying);
 
         return wiseSaying;
     }
 
     public List<WiseSaying> findAll() {
-        return wiseSayingRepository.findAll();
+        return wiseSayingMemRepository.findAll();
     }
 
     public WiseSaying findById(int id) {
-        Optional<WiseSaying> wiseSaying = wiseSayingRepository.findById(id);
+        Optional<WiseSaying> wiseSaying = wiseSayingMemRepository.findById(id);
 
         if(wiseSaying.isEmpty()) {
             throw new RuntimeException("%d번 명언은 존재하지 않습니다.".formatted(id));
@@ -59,14 +59,14 @@ public class WiseSayingService {
     }
 
     public void delete(WiseSaying wiseSaying) {
-        wiseSayingRepository.delete(wiseSaying);
+        wiseSayingMemRepository.delete(wiseSaying);
     }
 
     public void modify(WiseSaying wiseSaying, String content, String author) {
         wiseSaying.update(content, author);
     }
 
-    public int count(){
-        return wiseSayingRepository.count();
+    public long count(){
+        return wiseSayingMemRepository.count();
     }
 }
