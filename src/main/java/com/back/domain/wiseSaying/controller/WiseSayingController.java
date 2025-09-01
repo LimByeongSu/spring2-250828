@@ -5,6 +5,7 @@ import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.domain.wiseSaying.service.WiseSayingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,6 +63,7 @@ public class WiseSayingController {
 
     @GetMapping("/wiseSaying/delete/{id}")  //식별자니까 /wiseSaying/delete/1의 형태로 받을것이다.
     @ResponseBody
+    @Transactional  // 식별자로 wiseSaying을 찾고 삭제하는 과정까지는 하나로 묶이는게 맞다
     public String delete(
             @PathVariable int id    // @PathVariable은 path에 있는 값을 꺼내 쓰겠다는 의미다.
     ){
