@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor    // 빈 주입
 public class WiseSayingController {
 
-    private WiseSayingService wiseSayingService;
+    private final WiseSayingService wiseSayingService;
     private final MarkdownService markdownService;
 
 
