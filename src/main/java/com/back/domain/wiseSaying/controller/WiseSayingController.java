@@ -1,11 +1,9 @@
 package com.back.domain.wiseSaying.controller;
 
+import com.back.domain.standard.MarkdownService;
 import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.domain.wiseSaying.service.WiseSayingService;
 import lombok.RequiredArgsConstructor;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +17,7 @@ import java.util.stream.Collectors;
 public class WiseSayingController {
 
     private WiseSayingService wiseSayingService;
-    private  final Parser parser;
-    private  final HtmlRenderer renderer;
+    private final MarkdownService markdownService;
 
 
     @GetMapping("/wiseSaying/write")
@@ -99,11 +96,9 @@ public class WiseSayingController {
         WiseSaying wiseSaying = wiseSayingService.findById(id);
 
         // 파서 & 렌더러 준비 -> bean으로 해결
-        Node document = parser.parse(wiseSaying.getContent());
-
-
         // HTML 변환
-        String html = renderer.render(document);
+
+        String html = markdownService.toHtml(wiseSaying.getContent());
 
         return """
                 <h1>번호 : %s</h1>
