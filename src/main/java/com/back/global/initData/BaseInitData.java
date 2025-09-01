@@ -61,6 +61,9 @@ public class BaseInitData {
         wiseSayingService.write("명언2", "작가2");;
         wiseSayingService.write("명언3", "작가3");;
         wiseSayingService.write("명언4", "작가4");;
-        wiseSayingService.write("명언5", "작가5");;
+        wiseSayingService.write("""
+                - 너 자신을 알라
+                - 나의 죽음을 적에게 알리지 말라 
+                """, "작가5");;
     }
 }
